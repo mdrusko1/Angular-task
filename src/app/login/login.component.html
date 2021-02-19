@@ -1,0 +1,42 @@
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <div class="fadeIn first">
+      <i class="fa fa-4x fa-user" id="icon">
+      </i>
+    </div>
+
+    <!-- Login Form -->
+    <div class="login-container">
+      <form [formGroup]="loginForm">
+        <div class="form-group">
+          <label for="username">UserName:</label>
+          <input type="text" class="form-control"
+                 formControlName="username" id="username"
+                 #username autocomplete="off">
+          <div class="alert alert-danger" role="alert"
+               *ngIf="loginForm.controls['username'].hasError('required') &&
+               loginForm.controls['username'].touched"> Username is required
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" class="form-control"
+                 formControlName="password" id="password"
+                 #password autocomplete="off">
+          <div class="alert alert-danger" role="alert"
+               *ngIf="loginForm.controls['password'].hasError('required') &&
+               loginForm.controls['password'].touched"> Password is required
+          </div>
+        </div>
+        <button class="btn btn-success" (click)="onSubmit()"
+                [disabled]="loginForm.invalid">Submit
+        </button>
+
+        <div *ngIf="invalidLogin" class="error">
+          <div>Invalid credentials.</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
