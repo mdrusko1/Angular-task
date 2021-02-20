@@ -10,13 +10,15 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
 import {InMemoryDataService} from '../in-memory-data.service';
 import {HeaderComponent} from './header/header.component';
+import {SpinnerComponent} from './util/spinner.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    HeaderComponent
+    HeaderComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,

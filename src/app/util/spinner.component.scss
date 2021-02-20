@@ -1,0 +1,20 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  width: inherit;
+}
+
+.inline-spinner {
+  .spinner-border-sm {
+    border-width: 2px;
+  }
+}
+
+.overlay-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 100%;
+}
+
+

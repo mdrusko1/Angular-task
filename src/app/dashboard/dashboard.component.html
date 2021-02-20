@@ -1,7 +1,8 @@
-<div class="row m-3 p-5">
+<div class="row m-5 p-5">
   <div class="col-7">
-    <h2>Users</h2>
+    <h4><span class="fa fa-users"></span> Users</h4>
     <table class="table table-hover">
+      <ng-container *ngIf="users else spinner">
       <thead>
       <tr class="bg-light">
         <th scope="col">Username</th>
@@ -9,19 +10,18 @@
         <th scope="col">Last name</th>
       </tr>
       </thead>
-
-      <tbody>
-      <tr *ngFor="let user of users" (click)="onUserClick(user)">
-        <td>{{ user.username }}</td>
-        <td>{{ user.firstName }}</td>
-        <td>{{ user.lastName }}</td>
-      </tr>
-      </tbody>
+        <tbody>
+        <tr *ngFor="let user of users" (click)="onUserClick(user)">
+          <td>{{ user.username }}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+        </tr>
+        </tbody>
+      </ng-container>
     </table>
   </div>
 
   <div class="col-5">
-    <h2>FORMA</h2>
     <div class="login-container">
       <form [formGroup]="userForm">
         <div class="form-group">
@@ -88,9 +88,9 @@
             <option *ngFor="let country of countries" [ngValue]="country">{{country.country_code}}
               - {{country.country_name}}</option>
           </select>
-<!--          <div class="invalid-feedback" *ngIf="isSubmitted && country.errors?.required">-->
-<!--            <sup>*</sup>Please enter your city name-->
-<!--          </div>-->
+          <!--          <div class="invalid-feedback" *ngIf="isSubmitted && country.errors?.required">-->
+          <!--            <sup>*</sup>Please enter your city name-->
+          <!--          </div>-->
         </div>
 
         <div class="row">
@@ -110,3 +110,6 @@
     </div>
   </div>
 </div>
+<ng-template #spinner>
+  <app-spinner type="overlay"></app-spinner>
+</ng-template>

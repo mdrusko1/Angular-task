@@ -12,7 +12,7 @@ import {CountryService} from '../services/country.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  users: User[] = [];
+  users: User[];
   userForm: FormGroup;
   countries: Country[] = [];
   selectedCountry: any;
