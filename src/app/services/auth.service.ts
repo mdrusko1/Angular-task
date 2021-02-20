@@ -9,8 +9,8 @@ import {Router} from '@angular/router';
 })
 export class AuthService {
   SERVER_URL = 'http://localhost:8080';
-  loggedInUser: User;
-  refreshUserSubject: Subject<User> = new Subject<User>();
+  loggedInUser: string;
+  refreshUserSubject: Subject<string> = new Subject<string>();
 
   constructor(private httpClient: HttpClient,
               private router: Router) {
@@ -27,12 +27,16 @@ export class AuthService {
     }, this.handleError);
   }
 
-  saveUserToSessionStorage(userName: string) {
-    sessionStorage.setItem('user', userName);
+  saveUserToSessionStorage(user: string) {
+    sessionStorage.setItem('user', user);
   }
 
   removeUserFromSessionStorage() {
     sessionStorage.removeItem('user');
+  }
+
+  getUserFromSessionStorage(): string {
+    return sessionStorage.getItem('user');
   }
 
   checkIfUserExist(userName: string, password: string) {
@@ -41,7 +45,7 @@ export class AuthService {
         const user = users[i];
         if (user.username === userName && user.password === password) {
           console.log('Login success: ', user);
-          this.loggedInUser = user;
+          this.loggedInUser = user.username;
           this.refreshUserSubject.next(this.loggedInUser);
           this.saveUserToSessionStorage(user.username);
           this.router.navigate(['/dashboard']);
@@ -52,7 +56,7 @@ export class AuthService {
     });
   }
 
-  get getUser(): Observable<User> {
+  get getUser(): Observable<string> {
     return this.refreshUserSubject.asObservable();
   }
 

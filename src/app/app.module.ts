@@ -12,6 +12,7 @@ import {InMemoryDataService} from '../in-memory-data.service';
 import {HeaderComponent} from './header/header.component';
 import {SpinnerComponent} from './util/spinner.component';
 import {AuthGuard} from './guard/auth.guard';
+import {AngularOibValidatorModule} from 'angular-oib-validator';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {AuthGuard} from './guard/auth.guard';
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, {dataEncapsulation: false}
     ),
+    AngularOibValidatorModule.forRoot(),
     RouterModule.forRoot([
       {path: 'login', component: LoginComponent},
       {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},

@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../services/auth.service';
-import {User} from '../model/User';
 import {EMPTY, Observable} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 
@@ -10,7 +9,7 @@ import {catchError, tap} from 'rxjs/operators';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  user$: Observable<User>;
+  user$: Observable<string>;
 
   constructor(public authService: AuthService) {
     this.user$ = this.authService.getUser.pipe(tap(res => {
@@ -22,7 +21,8 @@ export class HeaderComponent implements OnInit {
     }));
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+  }
 
   onLogout() {
     this.authService.logout();
