@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {AuthService} from '../services/auth.service';
 import {User} from '../model/User';
 
@@ -9,19 +10,18 @@ import {User} from '../model/User';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
+
 export class LoginComponent implements OnInit {
-  invalidLogin = false;
-  loginForm: FormGroup;
   @ViewChild('username') inputUserName: ElementRef;
   @ViewChild('password') inputPassword: ElementRef;
+  loginForm: FormGroup;
+  invalidLogin;
 
   users: User[] = [];
 
   constructor(private authService: AuthService,
-              private formBuilder: FormBuilder,
-              private router: Router) {
+              private formBuilder: FormBuilder) {
 
-    window.localStorage.removeItem('token');
     this.loginForm = formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -29,19 +29,23 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.getUser.subscribe(res => {
+      this.invalidLogin = res === undefined ? this.invalidLogin = true : this.invalidLogin = false;
+    }, catchError(err => {
+      return this.handleError(err);
+    }));
   }
 
   onSubmit() {
     if (this.loginForm.invalid) {
       return;
     }
-
     const user = this.loginForm.value;
-    console.log(user);
-    this.router.navigate(['/dashboard']);
+    this.authService.login(user.username, user.password);
+  }
 
-    // this.authService.login(user.username, user.password).subscribe(data => {
-    //  console.log('Response: ', data);
-    // });
+  handleError(error: any) {
+    console.error(error);
+    return throwError(error);
   }
 }

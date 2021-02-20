@@ -2,20 +2,18 @@ import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../model/User';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
+import {AuthService} from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  API_USERS = 'api/users';
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient,
+              private authService: AuthService) { }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.API_USERS).pipe(
-      tap(data => console.log(data)),
+    return this.http.get<User[]>(`${this.authService.SERVER_URL + '/api/users'}`).pipe(
       catchError(this.handleError)
     );
   }

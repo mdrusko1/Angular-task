@@ -1,21 +1,19 @@
 import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {Country} from '../model/Country';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
+import {AuthService} from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CountryService {
-  API_COUNTRIES = 'api/countries';
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient,
+              private authService: AuthService) { }
 
   getCountries(): Observable<Country[]> {
-    return this.http.get<Country[]>(this.API_COUNTRIES).pipe(
-      tap(data => console.log(data)),
+    return this.http.get<Country[]>(`${this.authService.SERVER_URL + '/api/countries'}`).pipe(
       catchError(this.handleError)
     );
   }

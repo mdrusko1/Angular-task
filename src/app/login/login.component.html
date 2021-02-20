@@ -32,8 +32,8 @@
                 [disabled]="loginForm.invalid">Submit
         </button>
 
-        <div *ngIf="invalidLogin" class="error">
-          <div>Invalid credentials.</div>
+        <div *ngIf="invalidLogin" class="alert-danger">
+          <div class="mt-4">Invalid credentials.</div>
         </div>
       </form>
     </div>
