@@ -13,6 +13,8 @@ import {HeaderComponent} from './header/header.component';
 import {SpinnerComponent} from './util/spinner.component';
 import {AuthGuard} from './guard/auth.guard';
 import {AngularOibValidatorModule} from 'angular-oib-validator';
+import {ToastrModule} from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -24,12 +26,14 @@ import {AngularOibValidatorModule} from 'angular-oib-validator';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, {dataEncapsulation: false}
     ),
+    ToastrModule.forRoot(),
     AngularOibValidatorModule.forRoot(),
     RouterModule.forRoot([
       {path: 'login', component: LoginComponent},

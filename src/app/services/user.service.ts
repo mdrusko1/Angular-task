@@ -19,8 +19,16 @@ export class UserService {
     );
   }
 
-  addUser(user: { id: number, username: string, firstname: string, lastname: string, password: string, oib: string, country: string }) {
+  addUser(user) {
     return this.httpClient.post(`${this.authService.SERVER_URL + '/api/users'}`, user, {
+      headers: new HttpHeaders({
+        'User:': this.authService.getUserFromSessionStorage()
+      })
+    });
+  }
+
+  updateUser(user) {
+    return this.httpClient.put(`${this.authService.SERVER_URL + '/api/users'}/${user.id}`, user, {
       headers: new HttpHeaders({
         'User:': this.authService.getUserFromSessionStorage()
       })
@@ -34,7 +42,6 @@ export class UserService {
       })
     });
   }
-
 
   handleError(error: any) {
     console.error(error);

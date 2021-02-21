@@ -4,6 +4,9 @@ import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from '../services/auth.service';
 import {User} from '../model/User';
+import {SpinnerUtil} from '../util/spinner-utilities';
+import {UserService} from '../services/user.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,10 +20,10 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   invalidLogin;
 
-  users: User[] = [];
-
   constructor(private authService: AuthService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private userService: UserService,
+              private router: Router) {
 
     this.loginForm = formBuilder.group({
       username: ['', Validators.required],
@@ -40,8 +43,28 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
+    SpinnerUtil.showSpinner();
     const user = this.loginForm.value;
-    this.authService.login(user.username, user.password);
+    this.authService.login(user.username, user.password).subscribe((data: User) => {
+        console.log(data);
+        SpinnerUtil.hideSpinner();
+        this.verifyCredentials(user.username, user.password);
+      }
+    );
+  }
+
+  verifyCredentials(userName: string, password: string) {
+    this.userService.getUsers().subscribe((users: User[]) => {
+      for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        if (user.username === userName && user.password === password) {
+          this.authService.saveUserSession(user.username);
+          this.invalidLogin = false;
+          this.router.navigate(['/dashboard']);
+        }
+      }
+      this.invalidLogin = true;
+    });
   }
 
   handleError(error: any) {

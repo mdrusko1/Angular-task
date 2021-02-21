@@ -1,2 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
+.spinner-pos {
+  z-index: 2000;
+  position: absolute;
+  top: calc(50% - 50px);
+  left: calc(50% + 75px);
+  color: white;
+}
+
+.full-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.55);
+}

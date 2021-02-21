@@ -1,11 +1,16 @@
 <div class="container">
   <div class="col-12">
     <form [formGroup]="userForm">
+      <div class="form-group" hidden="hidden">
+        <label for="id">Id:</label>
+        <input type="text" class="form-control"
+               formControlName="id" id="id">
+      </div>
+
       <div class="form-group">
         <label for="username">User name:</label>
         <input type="text" class="form-control"
-               formControlName="username" id="username"
-               #username autocomplete="off">
+               formControlName="username" id="username">
         <div class="alert alert-danger" role="alert"
              *ngIf="userForm.controls['username'].hasError('required') &&
                userForm.controls['username'].touched"> User name is required
@@ -15,8 +20,7 @@
       <div class="form-group">
         <label for="firstname">First name:</label>
         <input type="text" class="form-control"
-               formControlName="firstname" id="firstname"
-               #firstname autocomplete="off">
+               formControlName="firstname" id="firstname">
         <div class="alert alert-danger" role="alert"
              *ngIf="userForm.controls['firstname'].hasError('required') &&
                userForm.controls['firstname'].touched"> First name is required
@@ -26,8 +30,7 @@
       <div class="form-group">
         <label for="lastname">Last name:</label>
         <input type="text" class="form-control"
-               formControlName="lastname" id="lastname"
-               #lastname autocomplete="off">
+               formControlName="lastname" id="lastname">
         <div class="alert alert-danger" role="alert"
              *ngIf="userForm.controls['lastname'].hasError('required') &&
                userForm.controls['lastname'].touched"> Last name is required
@@ -37,8 +40,7 @@
       <div class="form-group">
         <label for="password">Password:</label>
         <input type="password" class="form-control"
-               formControlName="password" id="password"
-               #password autocomplete="off">
+               formControlName="password" id="password">
         <div class="alert alert-danger" role="alert"
              *ngIf="userForm.controls['password'].hasError('required') &&
                userForm.controls['password'].touched"> Password is required
@@ -48,25 +50,26 @@
       <div class="form-group">
         <label for="oib">OIB:</label>
         <input type="text" class="form-control"
-               formControlName="oib" id="oib"
-               #oib autocomplete="off">
+               formControlName="oib" id="oib">
         <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['oib'].errors?.validateOib">This doesn't appear to be a valid oib .
+             *ngIf="userForm.controls['oib'].touched &&
+             userForm.controls['oib'].errors?.validateOib">This doesn't appear to be a valid oib .
         </div>
       </div>
 
       <div class="form-group">
         <label for="country">Country:</label>
-        <select [(ngModel)]="selectedCountry" class="custom-select"
-                (change)="onSelectedCountry(selectedCountry)"
+        <select class="custom-select"
                 formControlName="country" id="country">
           <option value="">Choose your country</option>
-          <option *ngFor="let country of countries" [ngValue]="country">{{country.country_code}}
+          <option [selected]="country.country_code" *ngFor="let country of countries"
+                  [value]="country.country_name">{{country.country_code}}
             - {{country.country_name}} </option>
         </select>
         <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['country'].hasError('required')">
-          <sup>*</sup>Please select country
+             *ngIf="userForm.controls['country'].touched &&
+             userForm.controls['country'].hasError('required')">
+          Please select country
         </div>
       </div>
 
@@ -78,7 +81,7 @@
         </div>
 
         <div class="col-6 d-flex flex-row-reverse">
-          <button class="btn btn-danger" (click)="onDelete()"
+          <button class="btn btn-danger" (click)="showDeleteDialog()"
                   [disabled]="userForm.invalid">Delete
           </button>
         </div>
