@@ -1,12 +1,12 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from '../services/auth.service';
 import {User} from '../model/User';
 import {SpinnerUtil} from '../util/spinner-utilities';
 import {UserService} from '../services/user.service';
 import {Router} from '@angular/router';
+import {handleError} from '../util/error-handler';
 
 @Component({
   selector: 'app-login',
@@ -31,29 +31,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.authService.getUser.subscribe(res => {
-      this.invalidLogin = res === undefined ? this.invalidLogin = true : this.invalidLogin = false;
-    }, catchError(err => {
-      return this.handleError(err);
-    }));
-  }
-
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      return;
-    }
-    SpinnerUtil.showSpinner();
-    const user = this.loginForm.value;
-    this.authService.login(user.username, user.password).subscribe((data: User) => {
-        console.log(data);
-        SpinnerUtil.hideSpinner();
-        this.verifyCredentials(user.username, user.password);
-      }
-    );
-  }
-
-  verifyCredentials(userName: string, password: string) {
+  private verifyCredentials(userName: string, password: string) {
     this.userService.getUsers().subscribe((users: User[]) => {
       for (let i = 0; i < users.length; i++) {
         const user = users[i];
@@ -67,8 +45,24 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  handleError(error: any) {
-    console.error(error);
-    return throwError(error);
+  ngOnInit(): void {
+    this.authService.getUser.subscribe(res => {
+      this.invalidLogin = res === undefined ? this.invalidLogin = true : this.invalidLogin = false;
+    }, catchError(err => {
+      return handleError(err);
+    }));
+  }
+
+  onSubmit() {
+    if (this.loginForm.invalid) {
+      return;
+    }
+    SpinnerUtil.showSpinner();
+    const user = this.loginForm.value;
+    this.authService.login(user.username, user.password).subscribe(() => {
+        SpinnerUtil.hideSpinner();
+        this.verifyCredentials(user.username, user.password);
+      }
+    );
   }
 }

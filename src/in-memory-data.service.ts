@@ -14,17 +14,17 @@ export class InMemoryDataService implements InMemoryDbService {
     const login = [];
 
     const users = [
-      new User(1, 'user1', 'Marko', 'Drušković', 'pass1', '93731750111', 'Croatia'),
-      new User(2, 'user2', 'Patrick', 'Stewart', 'pass2', '85038503488', 'Solomon Islands'),
-      new User(3, 'user3', 'Jonathan', 'Frakes', 'pass3', '26392830294', 'Russian Federation'),
-      new User(4, 'user4', 'LeVar', 'Burton', 'pass4', '77292888877', 'Austria'),
-      new User(5, 'user5', 'Denise', 'Crosby', 'pass5', '67236707382', 'Kazakhstan'),
+      new User(1, 'user1', 'Marko', 'Drušković', 'pass1', '93731750111', '385'),
+      new User(2, 'user2', 'Patrick', 'Stewart', 'pass2', '85038503488', '667'),
+      new User(3, 'user3', 'Jonathan', 'Frakes', 'pass3', '26392830294', '117'),
+      new User(4, 'user4', 'LeVar', 'Burton', 'pass4', '77292888877', '43'),
+      new User(5, 'user5', 'Denise', 'Crosby', 'pass5', '67236707382', '996'),
     ];
 
     const countries = [
       new Country(1, '385', 'Croatia'),
       new Country(2, '667', 'Solomon Islands'),
-      new Country(3, '007', 'Russian Federation'),
+      new Country(3, '117', 'Russian Federation'),
       new Country(4, '43', 'Austria'),
       new Country(5, '996', 'Kazakhstan'),
     ];

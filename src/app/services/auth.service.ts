@@ -1,13 +1,14 @@
-import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, Subject, throwError} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 import {Router} from '@angular/router';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  SERVER_URL = 'http://localhost:8080';
+  SERVER_URL = environment.baseUrl;
   loggedInUser: string;
   refreshingInUserSubject: Subject<string> = new Subject<string>();
 
@@ -40,11 +41,6 @@ export class AuthService {
 
   get getUser(): Observable<string> {
     return this.refreshingInUserSubject.asObservable();
-  }
-
-  handleError(error: any) {
-    console.error(error);
-    return throwError(error);
   }
 
   logout() {

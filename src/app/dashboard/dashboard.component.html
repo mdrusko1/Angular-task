@@ -2,6 +2,7 @@
   <div class="col-12">
     <form [formGroup]="userForm">
       <div class="shadow p-3 mb-5 bg-white rounded">
+
         <div class="form-group" hidden="hidden">
           <label for="id">Id:</label>
           <input type="text" class="form-control"
@@ -63,9 +64,9 @@
           <select class="custom-select"
                   formControlName="country" id="country">
             <option value="">Choose your country</option>
-            <option [selected]="country.country_code" *ngFor="let country of countries"
-                    [value]="country.country_name">{{country.country_code}}
-              - {{country.country_name}} </option>
+            <option *ngFor="let country of countries"
+                    [value]="country.country_code">{{country.country_code}} - {{country.country_name}}
+            </option>
           </select>
           <div class="alert alert-danger" role="alert"
                *ngIf="userForm.controls['country'].touched &&

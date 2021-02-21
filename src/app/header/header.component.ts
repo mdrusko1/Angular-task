@@ -13,10 +13,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(public authService: AuthService) {
     this.user$ = this.authService.getUser.pipe(tap(res => {
-      console.log(res);
       return res;
     }), catchError(err => {
-      console.log('Error: ', err);
       return EMPTY;
     }));
   }

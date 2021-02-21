@@ -2,12 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {User} from '../model/User';
 import {UserService} from '../services/user.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {throwError} from 'rxjs';
 import {Country} from '../model/Country';
 import {CountryService} from '../services/country.service';
 import {OibValidator} from 'angular-oib-validator';
 import {ToastrService} from 'ngx-toastr';
-import {hideSpinnerAndDisplayError} from '../util/error-handler';
+import {handleError, hideSpinnerAndDisplayError} from '../util/error-handler';
 import {SpinnerUtil} from '../util/spinner-utilities';
 import Swal from 'sweetalert2';
 
@@ -39,54 +38,20 @@ export class DashboardComponent implements OnInit {
     this.userForm.reset();
   }
 
-  ngOnInit(): void {
-    this.getUsers();
-    this.getCountries();
-  }
-
-  getUsers() {
+  private getUsers() {
     this.userService.getUsers().subscribe(data => {
       this.users = data;
       return data;
-    }, this.handleError);
+    }, handleError);
   }
 
   private getCountries() {
     this.countryService.getCountries().subscribe(data => {
       this.countries = data;
-    }, this.handleError);
+    }, handleError);
   }
 
-  onUserEdit(user: User) {
-    this.selectedUser = user;
-    this.userForm.controls['id'].setValue(user.id);
-    this.userForm.controls['username'].setValue(user.username);
-    this.userForm.controls['firstname'].setValue(user.firstname);
-    this.userForm.controls['lastname'].setValue(user.lastname);
-    this.userForm.controls['password'].setValue(user.password);
-    this.userForm.controls['oib'].setValue(user.oib);
-    this.userForm.controls['country'].setValue(this.getCountryByName(user.country).country_name);
-  }
-
-  onSave() {
-    SpinnerUtil.showSpinner();
-    const user = this.userForm.value;
-
-    if (user.id == null) {
-      this.userService.addUser(user).subscribe(() => {
-        this.showSuccessToast(`User ${user.firstname + ' ' + user.lastname + ' saved!'}`);
-      }, err => hideSpinnerAndDisplayError(err));
-    } else {
-      this.userService.updateUser(user).subscribe(() => {
-        this.showSuccessToast(`User ${user.firstname + ' ' + user.lastname + ' updated!'}`);
-      }, err => hideSpinnerAndDisplayError(err));
-    }
-    SpinnerUtil.hideSpinner();
-    this.userForm.reset();
-    this.getUsers();
-  }
-
-  onDelete() {
+  private onDelete() {
     SpinnerUtil.showSpinner();
     this.userService.deleteUser(this.selectedUser.id).subscribe(() => {
       this.showSuccessToast('User deleted!');
@@ -98,18 +63,64 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  getCountryByName(name: string) {
-    const country = this.countries.find(i => i.country_name === name);
+  private getCountryById(id: string) {
+    const country = this.countries.find(i => i.country_code === id);
     if (typeof country === 'undefined') {
       return null;
     }
     return country;
   }
 
-  showSuccessToast(msg: string) {
+  private checkIfOibExist(oib: string): boolean {
+    const exist = this.users.find(x => x.oib === oib);
+    return !!exist;
+  }
+
+  private showSuccessToast(msg: string) {
     this.toast.success(msg, 'Success', {
       timeOut: 2000
     });
+  }
+
+  ngOnInit(): void {
+    this.getUsers();
+    this.getCountries();
+  }
+
+  onUserEdit(user: User) {
+    this.selectedUser = user;
+    this.userForm.controls['id'].setValue(user.id);
+    this.userForm.controls['username'].setValue(user.username);
+    this.userForm.controls['firstname'].setValue(user.firstname);
+    this.userForm.controls['lastname'].setValue(user.lastname);
+    this.userForm.controls['password'].setValue(user.password);
+    this.userForm.controls['oib'].setValue(user.oib);
+    this.userForm.controls['country'].setValue(this.getCountryById(user.country).country_code);
+  }
+
+  onSave() {
+    const user = this.userForm.value;
+    SpinnerUtil.showSpinner();
+
+    if (user.id == null) {
+      if (this.checkIfOibExist(user.oib)) {
+        this.showOibExistDialog();
+        SpinnerUtil.hideSpinner();
+        return;
+      }
+      // Save New User
+      this.userService.addUser(user).subscribe(() => {
+        this.showSuccessToast(`User ${user.firstname + ' ' + user.lastname + ' saved!'}`);
+      }, err => hideSpinnerAndDisplayError(err));
+    } else {
+      // Update Existing User
+      this.userService.updateUser(user).subscribe(() => {
+        this.showSuccessToast(`User ${user.firstname + ' ' + user.lastname + ' updated!'}`);
+      }, err => hideSpinnerAndDisplayError(err));
+    }
+    SpinnerUtil.hideSpinner();
+    this.userForm.reset();
+    this.getUsers();
   }
 
   showDeleteDialog() {
@@ -129,9 +140,11 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  handleError(error: any) {
-    console.error(error);
-    return throwError(error);
+  showOibExistDialog() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'User with this OIB already exist!',
+    }).then(d => d.dismiss);
   }
 }
-

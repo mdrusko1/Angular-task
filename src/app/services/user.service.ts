@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {User} from '../model/User';
+import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {User} from '../model/User';
 import {AuthService} from './auth.service';
+import {handleError} from '../util/error-handler';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class UserService {
 
   getUsers(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${this.authService.SERVER_URL + '/api/users'}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
@@ -41,10 +42,5 @@ export class UserService {
         'User': this.authService.getUserFromSessionStorage()
       })
     });
-  }
-
-  handleError(error: any) {
-    console.error(error);
-    return throwError(error);
   }
 }

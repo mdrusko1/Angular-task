@@ -1,5 +1,6 @@
 import swal from 'sweetalert2';
 import {SpinnerUtil} from './spinner-utilities';
+import {throwError} from 'rxjs';
 
 export function displayBackendError(resp: any) {
 
@@ -21,4 +22,9 @@ export function displayErrorMessage(msg: string) {
 export function hideSpinnerAndDisplayError(err: any) {
   SpinnerUtil.hideSpinner();
   displayBackendError(err);
+}
+
+export function handleError(error: any) {
+  console.error(error);
+  return throwError(error);
 }
