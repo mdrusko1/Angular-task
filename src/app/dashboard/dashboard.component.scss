@@ -1,4 +1,4 @@
-tr {
+tr:hover td {
   cursor: pointer;
 }
 
@@ -14,4 +14,22 @@ form {
 
 .container {
   margin-top: 6rem;
+}
+
+.bg-light {
+  background-color: #43617a !important;
+  color: white;
+}
+
+.fa-users, h4 {
+  color: rgba(134, 150, 167, 0.39);
+  padding: 3px;
+}
+
+tr:hover {
+  background: #43617a !important;
+}
+
+tr:hover td {
+  background-color: #eaf2f8 !important;
 }

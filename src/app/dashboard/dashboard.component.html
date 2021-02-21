@@ -1,89 +1,91 @@
 <div class="container">
   <div class="col-12">
     <form [formGroup]="userForm">
-      <div class="form-group" hidden="hidden">
-        <label for="id">Id:</label>
-        <input type="text" class="form-control"
-               formControlName="id" id="id">
-      </div>
+      <div class="shadow p-3 mb-5 bg-white rounded">
+        <div class="form-group" hidden="hidden">
+          <label for="id">Id:</label>
+          <input type="text" class="form-control"
+                 formControlName="id" id="id">
+        </div>
 
-      <div class="form-group">
-        <label for="username">User name:</label>
-        <input type="text" class="form-control"
-               formControlName="username" id="username">
-        <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['username'].hasError('required') &&
+        <div class="form-group">
+          <label for="username">User name:</label>
+          <input type="text" class="form-control"
+                 formControlName="username" id="username">
+          <div class="alert alert-danger" role="alert"
+               *ngIf="userForm.controls['username'].hasError('required') &&
                userForm.controls['username'].touched"> User name is required
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="firstname">First name:</label>
-        <input type="text" class="form-control"
-               formControlName="firstname" id="firstname">
-        <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['firstname'].hasError('required') &&
+        <div class="form-group">
+          <label for="firstname">First name:</label>
+          <input type="text" class="form-control"
+                 formControlName="firstname" id="firstname">
+          <div class="alert alert-danger" role="alert"
+               *ngIf="userForm.controls['firstname'].hasError('required') &&
                userForm.controls['firstname'].touched"> First name is required
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="lastname">Last name:</label>
-        <input type="text" class="form-control"
-               formControlName="lastname" id="lastname">
-        <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['lastname'].hasError('required') &&
+        <div class="form-group">
+          <label for="lastname">Last name:</label>
+          <input type="text" class="form-control"
+                 formControlName="lastname" id="lastname">
+          <div class="alert alert-danger" role="alert"
+               *ngIf="userForm.controls['lastname'].hasError('required') &&
                userForm.controls['lastname'].touched"> Last name is required
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control"
-               formControlName="password" id="password">
-        <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['password'].hasError('required') &&
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" class="form-control"
+                 formControlName="password" id="password">
+          <div class="alert alert-danger" role="alert"
+               *ngIf="userForm.controls['password'].hasError('required') &&
                userForm.controls['password'].touched"> Password is required
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="oib">OIB:</label>
-        <input type="text" class="form-control"
-               formControlName="oib" id="oib">
-        <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['oib'].touched &&
+        <div class="form-group">
+          <label for="oib">OIB:</label>
+          <input type="text" class="form-control"
+                 formControlName="oib" id="oib">
+          <div class="alert alert-danger" role="alert"
+               *ngIf="userForm.controls['oib'].touched &&
              userForm.controls['oib'].errors?.validateOib">This doesn't appear to be a valid oib .
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="country">Country:</label>
-        <select class="custom-select"
-                formControlName="country" id="country">
-          <option value="">Choose your country</option>
-          <option [selected]="country.country_code" *ngFor="let country of countries"
-                  [value]="country.country_name">{{country.country_code}}
-            - {{country.country_name}} </option>
-        </select>
-        <div class="alert alert-danger" role="alert"
-             *ngIf="userForm.controls['country'].touched &&
+        <div class="form-group">
+          <label for="country">Country:</label>
+          <select class="custom-select"
+                  formControlName="country" id="country">
+            <option value="">Choose your country</option>
+            <option [selected]="country.country_code" *ngFor="let country of countries"
+                    [value]="country.country_name">{{country.country_code}}
+              - {{country.country_name}} </option>
+          </select>
+          <div class="alert alert-danger" role="alert"
+               *ngIf="userForm.controls['country'].touched &&
              userForm.controls['country'].hasError('required')">
-          Please select country
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">
-          <button class="btn btn-success" (click)="onSave()"
-                  [disabled]="userForm.invalid">Save
-          </button>
+            Please select country
+          </div>
         </div>
 
-        <div class="col-6 d-flex flex-row-reverse">
-          <button class="btn btn-danger" (click)="showDeleteDialog()"
-                  [disabled]="userForm.invalid">Delete
-          </button>
+        <div class="row">
+          <div class="col-6">
+            <button class="btn btn-success" (click)="onSave()"
+                    [disabled]="userForm.invalid">Save
+            </button>
+          </div>
+
+          <div class="col-6 d-flex flex-row-reverse">
+            <button class="btn btn-danger" (click)="showDeleteDialog()"
+                    [disabled]="userForm.invalid">Delete
+            </button>
+          </div>
         </div>
       </div>
     </form>
@@ -93,24 +95,26 @@
 <div class="container-fluid">
   <div class="col-12">
     <h4><span class="fa fa-users"></span> Users</h4>
-    <table class="table table-hover">
-      <ng-container *ngIf="users else spinner">
-        <thead>
-        <tr class="bg-light">
-          <th scope="col">Username</th>
-          <th scope="col">First Name</th>
-          <th scope="col">Last name</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let user of users" (click)="onUserEdit(user)">
-          <td>{{ user.username }}</td>
-          <td>{{ user.firstname }}</td>
-          <td>{{ user.lastname }}</td>
-        </tr>
-        </tbody>
-      </ng-container>
-    </table>
+    <div class="shadow-lg bg-white rounded">
+      <table class="table table-hover">
+        <ng-container *ngIf="users else spinner">
+          <thead>
+          <tr class="bg-light">
+            <th scope="col">Username</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last name</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of users" (click)="onUserEdit(user)">
+            <td>{{ user.username }}</td>
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastname }}</td>
+          </tr>
+          </tbody>
+        </ng-container>
+      </table>
+    </div>
   </div>
 </div>
 

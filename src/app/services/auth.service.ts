@@ -16,7 +16,7 @@ export class AuthService {
   }
 
   login(username: string, password: string) {
-    return this.httpClient.post(this.SERVER_URL + '/api/users', {
+    return this.httpClient.post(this.SERVER_URL + '/api/login', {
       credentials: {
         username: username,
         password: password

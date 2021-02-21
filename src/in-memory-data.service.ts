@@ -11,6 +11,8 @@ import {Country} from './app/model/Country';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
 
+    const login = [];
+
     const users = [
       new User(1, 'user1', 'Marko', 'Drušković', 'pass1', '93731750111', 'Croatia'),
       new User(2, 'user2', 'Patrick', 'Stewart', 'pass2', '85038503488', 'Solomon Islands'),
@@ -27,7 +29,7 @@ export class InMemoryDataService implements InMemoryDbService {
       new Country(5, '996', 'Kazakhstan'),
     ];
 
-    return {users, countries};
+    return {users, countries, login};
 
   }
 
