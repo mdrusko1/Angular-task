@@ -9,6 +9,8 @@ import {ToastrService} from 'ngx-toastr';
 import {handleError, hideSpinnerAndDisplayError} from '../util/error-handler';
 import {SpinnerUtil} from '../util/spinner-utilities';
 import Swal from 'sweetalert2';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,8 +21,10 @@ import Swal from 'sweetalert2';
 export class DashboardComponent implements OnInit {
   countries: Country[];
   selectedUser: User;
-  users: User[];
   userForm: FormGroup;
+
+  users$: Observable<Array<User>>;
+  refreshUsers$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private userService: UserService,
               private countryService: CountryService,
@@ -39,10 +43,10 @@ export class DashboardComponent implements OnInit {
   }
 
   private getUsers() {
-    this.userService.getUsers().subscribe(data => {
-      this.users = data;
-      return data;
-    }, handleError);
+    this.users$ = this.refreshUsers$.pipe(switchMap(_ => this.userService.getUsers().pipe(
+      map(data => {
+        return data;
+      }), catchError(handleError))));
   }
 
   private getCountries() {
@@ -56,7 +60,7 @@ export class DashboardComponent implements OnInit {
     this.userService.deleteUser(this.selectedUser.id).subscribe(() => {
       this.showSuccessToast('User deleted!');
       this.userForm.reset();
-      this.getUsers();
+      this.refreshUsers$.next(true);
       SpinnerUtil.hideSpinner();
     }, err => {
       hideSpinnerAndDisplayError(err);
@@ -72,8 +76,11 @@ export class DashboardComponent implements OnInit {
   }
 
   private checkIfOibExist(oib: string): boolean {
-    const exist = this.users.find(x => x.oib === oib);
-    return !!exist;
+    const exist = this.users$.pipe(map(data => {
+      data.find(x => x.oib === oib);
+      return !!exist;
+    }));
+    return false;
   }
 
   private showSuccessToast(msg: string) {
@@ -120,7 +127,7 @@ export class DashboardComponent implements OnInit {
     }
     SpinnerUtil.hideSpinner();
     this.userForm.reset();
-    this.getUsers();
+    this.refreshUsers$.next(true);
   }
 
   showDeleteDialog() {

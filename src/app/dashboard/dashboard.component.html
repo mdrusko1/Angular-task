@@ -98,7 +98,7 @@
     <h4><span class="fa fa-users"></span> Users</h4>
     <div class="shadow-lg bg-white rounded">
       <table class="table table-hover">
-        <ng-container *ngIf="users else spinner">
+        <ng-container *ngIf="{users: users$ | async} as state else spinner">
           <thead>
           <tr class="bg-light">
             <th scope="col">Username</th>
@@ -107,7 +107,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of users" (click)="onUserEdit(user)">
+          <tr *ngFor="let user of state.users" (click)="onUserEdit(user)">
             <td>{{ user.username }}</td>
             <td>{{ user.firstname }}</td>
             <td>{{ user.lastname }}</td>
